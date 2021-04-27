@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pnr-order-poc-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pnr-order-poc-pod
+  template:
+    metadata:
+      labels:
+        app: pnr-order-poc-pod
+    spec:
+      containers:
+        - image: gcr.io/pnr-order-poc/spanner-poller-converter-publisher:latest
+          name: pnr-order-poc
+            
