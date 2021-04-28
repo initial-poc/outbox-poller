@@ -1,5 +1,6 @@
 package com.infogain.gcp.poc.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,6 +18,9 @@ import reactor.netty.http.client.HttpClient;
 @Component
 public class AppConfig {
 
+	@Value(value = "${serviceUrl}")
+	private String seriveUrl;
+	
 	@Bean
  public RestTemplate restTemplate() {
 	 return new RestTemplate();
@@ -37,7 +41,7 @@ public class AppConfig {
 		ClientHttpConnector connector = new ReactorClientHttpConnector(httpClient.wiretap(true));	    
 
 		return WebClient.builder()
-		        .baseUrl("http://localhost:9000")
+		        .baseUrl("http://"+seriveUrl)
 		        .clientConnector(connector)
 		        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 		        .build();

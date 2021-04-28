@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pnr-order-poc-deployment
+  name: outbox-poller-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: pnr-order-poc-pod
+      app: outbox-poller-pod
   template:
     metadata:
       labels:
-        app: pnr-order-poc-pod
+        app: outbox-poller-pod
     spec:
       containers:
-        - image: gcr.io/pnr-order-poc/spanner-poller-converter-publisher:latest
-          name: pnr-order-poc
+        - image: gcr.io/pnr-order-poc/outbox-poller:latest
+          name: outbox-poller
             
