@@ -17,7 +17,7 @@ public class PollerExecutor {
     @Autowired
     private PnrService pollerPnrService;
 
-     @Scheduled(cron = "*/10 * * * * *")
+     @Scheduled(cron = "*/20 * * * * *")
    // @Scheduled(cron = "0 * * * * *")
     public void process() {
         log.info("poller started at {}", LocalTime.now());

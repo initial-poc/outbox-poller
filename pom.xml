@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.infogain.gcp.poc</groupId>
-    <artifactId>pnr-order-poc</artifactId>
+    <artifactId>outbox-poller</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
@@ -25,9 +25,17 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-webflux</artifactId>
+</dependency>
 
-
- 
+<!-- 
+ <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>2.3.4.RELEASE</version>
+      </dependency> -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
