@@ -28,7 +28,8 @@ public class PnrService {
 	@Value(value = "${limit}")
 	private int recordLimit;
 
-	private static final String OUTBOX_SQL = "SELECT * FROM OUTBOX WHERE STATUS IN (0,4)";
+	private static final String OUTBOX_SQL = "SELECT * FROM OUTBOX WHERE STATUS =0";
+	private static final String OUTBOX_FAILED_RECORD_SQL = "SELECT * FROM OUTBOX WHERE STATUS =3";
 
 	@Autowired
 	@SneakyThrows
@@ -40,25 +41,37 @@ public class PnrService {
 
 	public void processRecords() {
 
+		doProcess(getRecord(OUTBOX_SQL));
+	}
+
+	public void processFailedRecords() {
+		doProcess(getRecord(OUTBOX_FAILED_RECORD_SQL));
+
+	}
+
+	public void doProcess(List<OutboxEntity> recordToProcess) {
+		log.info("total record -> {} to process by application->  {}", recordToProcess.size(), ip);
+		log.info("RECORD {}", recordToProcess);
+
+		process(recordToProcess);
+
+	}
+
+	private List<OutboxEntity> getRecord(String sql) {
 		log.info("Getting record to process by application->  {}", ip);
 		Stopwatch stopWatch = Stopwatch.createStarted();
 		SpannerOperations spannerTemplate = spannerOutboxRepository.getSpannerTemplate();
 		List<OutboxEntity> recordToProcess = spannerTemplate.query(OutboxEntity.class,
-				Statement.of(String.format(OUTBOX_SQL, recordLimit)), null);
+				Statement.of(String.format(sql, recordLimit)), null);
 		stopWatch.stop();
 		log.info("Total time taken to fetch the records {}", stopWatch);
-		if (recordToProcess.isEmpty()) {
-			log.info("No Record to process");
-			return;
-		}
-		log.info("total record - {} to process by application->  {}", recordToProcess.size(), ip);
-		log.info("RECORD {}", recordToProcess);
 
-		process(recordToProcess);
+		return recordToProcess;
+
 	}
-
 	private void process(List<OutboxEntity> outboxEntities) {
 		outboxEntities.stream().forEach(outboxStatusService::processRecord);
 	}
+	
 
 }

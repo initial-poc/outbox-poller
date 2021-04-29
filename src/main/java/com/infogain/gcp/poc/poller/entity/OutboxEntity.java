@@ -1,6 +1,5 @@
 package com.infogain.gcp.poc.poller.entity;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.cloud.gcp.data.spanner.core.mapping.Column;
 import org.springframework.cloud.gcp.data.spanner.core.mapping.PrimaryKey;
 import org.springframework.cloud.gcp.data.spanner.core.mapping.Table;
@@ -30,7 +29,7 @@ public class OutboxEntity {
 	private String parentLocator;
 	private Timestamp created;
 	private String data;
-	private String status;
+	private int status;
 	
 	
 	  @SneakyThrows
