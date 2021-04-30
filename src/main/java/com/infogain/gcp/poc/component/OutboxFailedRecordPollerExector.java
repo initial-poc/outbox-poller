@@ -2,17 +2,16 @@ package com.infogain.gcp.poc.component;
 
 import java.time.LocalTime;
 
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.infogain.gcp.poc.poller.service.OutboxRecordProcessorService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @Slf4j
-@Component
+@RestController
 @RequiredArgsConstructor
 public class OutboxFailedRecordPollerExector {
     private final OutboxRecordProcessorService pollerOutboxRecordProcessorService;
