@@ -2,6 +2,7 @@ package com.infogain.gcp.poc.component;
 
 import java.time.LocalTime;
 
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Component
 @RestController
+@Log
 public class OutboxPollerExecutor {
 
     @Autowired
