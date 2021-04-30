@@ -18,9 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class PnrService {
+public class OutboxRecordProcessorService {
 
-	private final OutboxService outboxStatusService;
+	private final APIGatewayService outboxStatusService;
 	private final SpannerOutboxRepository spannerOutboxRepository;
 	private final String ip;
 
@@ -28,11 +28,14 @@ public class PnrService {
 	private int recordLimit;
 
 	private static final String OUTBOX_SQL = "SELECT * FROM OUTBOX WHERE STATUS =0";
-	private static final String OUTBOX_FAILED_RECORD_SQL = "SELECT * FROM OUTBOX WHERE STATUS =3 and retry_count<=3";
+	private static final String OUTBOX_FAILED_RECORD_SQL =
+			"SELECT * FROM OUTBOX WHERE STATUS =3 and retry_count<=3";
+	private static final String OUTBOX_STUCK_RECORD_SQL =
+			"SELECT * FROM OUTBOX WHERE STATUS =1 and TIMESTAMP_DIFF(CURRENT_TIMESTAMP,updated, MINUTE)>5";
 
 	@Autowired
 	@SneakyThrows
-	public PnrService(OutboxService outboxStatusService, SpannerOutboxRepository spannerOutboxRepository) {
+	public OutboxRecordProcessorService(APIGatewayService outboxStatusService, SpannerOutboxRepository spannerOutboxRepository) {
 		this.outboxStatusService = outboxStatusService;
 		this.spannerOutboxRepository = spannerOutboxRepository;
 		ip = InetAddress.getLocalHost().getHostAddress();
@@ -44,6 +47,10 @@ public class PnrService {
 
 	public void processFailedRecords() {
 		doProcess(getRecord(OUTBOX_FAILED_RECORD_SQL));
+	}
+
+	public void processStuckRecords() {
+		doProcess(getRecord(OUTBOX_STUCK_RECORD_SQL));
 	}
 
 	public void doProcess(List<OutboxEntity> recordToProcess) {

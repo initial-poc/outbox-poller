@@ -6,22 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.infogain.gcp.poc.poller.service.PnrService;
+import com.infogain.gcp.poc.poller.service.OutboxRecordProcessorService;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Slf4j
 @Component
-public class PollerExecutor {
+public class OutboxPollerExecutor {
 
     @Autowired
-    private PnrService pollerPnrService;
+    private OutboxRecordProcessorService pollerOutboxRecordProcessorService;
 
-     @Scheduled(cron = "*/20 * * * * *")
-   // @Scheduled(cron = "0 * * * * *")
+    @GetMapping("/processOutboxRecords")
     public void process() {
         log.info("poller started at {}", LocalTime.now());
-        pollerPnrService.processRecords();
+        pollerOutboxRecordProcessorService.processRecords();
         log.info("poller completed at {}", LocalTime.now());
     }
 
