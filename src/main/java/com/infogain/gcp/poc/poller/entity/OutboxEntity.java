@@ -21,25 +21,31 @@ import lombok.ToString;
 @ToString
 @Table(name = "outbox")
 public class OutboxEntity {
-	@PrimaryKey(keyOrder =1)
-	private String locator;
-	@PrimaryKey(keyOrder =2)
-	private String version;
-	@Column(name="parent_locator")
-	private String parentLocator;
-	private Timestamp created;
-	private String data;
-	private int status;
-	
-	
-	  @SneakyThrows
-	    public PNRModel buildModel() {
-	        PNRModel pnrModel = new PNRModel();
-	        pnrModel.setMessageseq(this.getVersion());
-	        pnrModel.setPayload(this.getData());
-	        pnrModel.setPnrid(this.getLocator());
-	        pnrModel.setTimestamp(this.getCreated().toString());
-	        return pnrModel;
-	    }
+    @PrimaryKey(keyOrder = 1)
+    private String locator;
+    @PrimaryKey(keyOrder = 2)
+    private String version;
+    @Column(name = "parent_locator")
+    private String parentLocator;
+    private Timestamp created;
+    private String data;
+    private int status;
+
+    private int retry_count;
+
+    private Timestamp updated;
+
+
+    @SneakyThrows
+    public PNRModel buildModel() {
+        PNRModel pnrModel = new PNRModel();
+        pnrModel.setMessageseq(this.getVersion());
+        pnrModel.setPayload(this.getData());
+        pnrModel.setPnrid(this.getLocator());
+        pnrModel.setTimestamp(this.getCreated().toString());
+        pnrModel.setRetry_count(this.retry_count);
+        pnrModel.setUpdated(this.updated);
+        return pnrModel;
+    }
 
 }

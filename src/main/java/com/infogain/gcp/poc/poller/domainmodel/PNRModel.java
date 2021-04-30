@@ -1,5 +1,6 @@
 package com.infogain.gcp.poc.poller.domainmodel;
 
+import com.google.cloud.Timestamp;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,7 +14,6 @@ public class PNRModel {
 	private String messageseq;
 	private String payload;
 	private String timestamp;
-	
-	 
-
+	private int retry_count;
+	private Timestamp updated;
 }

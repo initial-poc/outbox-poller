@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-
 public class PnrService {
 
 	private final OutboxService outboxStatusService;
@@ -29,7 +28,7 @@ public class PnrService {
 	private int recordLimit;
 
 	private static final String OUTBOX_SQL = "SELECT * FROM OUTBOX WHERE STATUS =0";
-	private static final String OUTBOX_FAILED_RECORD_SQL = "SELECT * FROM OUTBOX WHERE STATUS =3";
+	private static final String OUTBOX_FAILED_RECORD_SQL = "SELECT * FROM OUTBOX WHERE STATUS =3 and retry_count<=3";
 
 	@Autowired
 	@SneakyThrows
@@ -40,21 +39,17 @@ public class PnrService {
 	}
 
 	public void processRecords() {
-
 		doProcess(getRecord(OUTBOX_SQL));
 	}
 
 	public void processFailedRecords() {
 		doProcess(getRecord(OUTBOX_FAILED_RECORD_SQL));
-
 	}
 
 	public void doProcess(List<OutboxEntity> recordToProcess) {
 		log.info("total record -> {} to process by application->  {}", recordToProcess.size(), ip);
 		log.info("RECORD {}", recordToProcess);
-
 		process(recordToProcess);
-
 	}
 
 	private List<OutboxEntity> getRecord(String sql) {
@@ -65,13 +60,10 @@ public class PnrService {
 				Statement.of(String.format(sql, recordLimit)), null);
 		stopWatch.stop();
 		log.info("Total time taken to fetch the records {}", stopWatch);
-
 		return recordToProcess;
 
 	}
 	private void process(List<OutboxEntity> outboxEntities) {
 		outboxEntities.stream().forEach(outboxStatusService::processRecord);
 	}
-	
-
 }
