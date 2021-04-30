@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalTime;
 
 @Slf4j
-@Component
+@RestController
 @RequiredArgsConstructor
 @RestController
 public class FailedMessageGroupRecordPollerExector {
