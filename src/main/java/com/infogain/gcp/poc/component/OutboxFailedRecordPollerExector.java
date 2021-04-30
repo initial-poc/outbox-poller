@@ -10,10 +10,12 @@ import com.infogain.gcp.poc.poller.service.OutboxRecordProcessorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@RestController
 public class OutboxFailedRecordPollerExector {
     private final OutboxRecordProcessorService pollerOutboxRecordProcessorService;
 
@@ -26,8 +28,8 @@ public class OutboxFailedRecordPollerExector {
 
     @GetMapping("/processOutboxStuckRecords")
     public void processStuckRecords() {
-        log.info("Failed Record poller started at {}", LocalTime.now());
+        log.info("Stuck Record poller started at {}", LocalTime.now());
         pollerOutboxRecordProcessorService.processStuckRecords();
-        log.info("Failed Record poller completed at {}", LocalTime.now());
+        log.info("Stuck Record poller completed at {}", LocalTime.now());
     }
 }

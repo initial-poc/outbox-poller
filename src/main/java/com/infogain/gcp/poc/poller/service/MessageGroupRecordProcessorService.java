@@ -1,5 +1,6 @@
 package com.infogain.gcp.poc.poller.service;
 
+import com.google.cloud.Timestamp;
 import com.google.cloud.spanner.Statement;
 import com.google.common.base.Stopwatch;
 import com.infogain.gcp.poc.poller.entity.GroupMessageStoreEntity;
@@ -24,8 +25,8 @@ public class MessageGroupRecordProcessorService {
     private final SpannerGroupMessageStoreRepository groupMessageStoreRepository;
     private final String ip;
 
-    @Value(value = "${limit}")
-    private int recordLimit;
+    //@Value(value = "${limit}")
+    private int recordLimit=10;
 
     private static final String GRP_MSG_STORE_FAILED_SQL =
             "SELECT * FROM group_message_store WHERE STATUS =3 and retry_count<=3";
@@ -75,6 +76,7 @@ public class MessageGroupRecordProcessorService {
             entity.setRetry_count(entity.getRetry_count()+1);
         }
         entity.setStatus(status);
+        entity.setUpdated(Timestamp.now());
         log.info("Going to update status for the record {}", entity);
         groupMessageStoreRepository.save(entity);
     }

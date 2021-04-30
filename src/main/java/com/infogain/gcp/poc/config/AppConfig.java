@@ -18,8 +18,8 @@ import reactor.netty.http.client.HttpClient;
 @Component
 public class AppConfig {
 
-	@Value(value = "${serviceUrl}")
-	private String seriveUrl;
+//	@Value(value = "${serviceUrl}")
+	private String seriveUrl="localhost:9000";
 	
 	@Bean
  public RestTemplate restTemplate() {

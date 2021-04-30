@@ -21,10 +21,10 @@ public class APIGatewayService {
 	private final OutboxGateway gateway;
 
 	public void processRecord(OutboxEntity outboxEntity) {
-		/*if(outboxEntity.getStatus()==RecordStatus.IN_PROGESS.getStatusCode()) {
+		if(outboxEntity.getStatus()==RecordStatus.IN_PROGESS.getStatusCode()) {
 			updateRecord(outboxEntity,RecordStatus.FAILED.getStatusCode());
 			return;
-		}*/
+		}
 
 		updateRecord(outboxEntity, RecordStatus.IN_PROGESS.getStatusCode());
 
@@ -43,7 +43,7 @@ public class APIGatewayService {
 			entity.setRetry_count(entity.getRetry_count()+1);
 		}
 		entity.setStatus(status);
-		//entity.setUpdated(Timestamp.now());
+		entity.setUpdated(Timestamp.now());
 		log.info("Going to update status for the record {}", entity);
 		outboxRepository.save(entity);
 	}

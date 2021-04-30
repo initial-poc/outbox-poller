@@ -24,8 +24,8 @@ public class OutboxRecordProcessorService {
 	private final SpannerOutboxRepository spannerOutboxRepository;
 	private final String ip;
 
-	@Value(value = "${limit}")
-	private int recordLimit;
+//	@Value(value = "${limit}")
+	private int recordLimit=10;
 
 	private static final String OUTBOX_SQL = "SELECT * FROM OUTBOX WHERE STATUS =0";
 	private static final String OUTBOX_FAILED_RECORD_SQL =
