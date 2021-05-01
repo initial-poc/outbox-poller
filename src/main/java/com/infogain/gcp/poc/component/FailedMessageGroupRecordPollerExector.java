@@ -15,16 +15,15 @@ import java.time.LocalTime;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@Log
 public class FailedMessageGroupRecordPollerExector {
     private final MessageGroupRecordProcessorService messageGroupRecordProcessorService;
 
-   /* @GetMapping("/processMessageGroupFailedRecords")
+    @GetMapping("/processMessageGroupFailedRecords")
     public void processFailedRecords() {
         log.info("Failed Record poller started at {}", LocalTime.now());
         messageGroupRecordProcessorService.processFailedRecords();
         log.info("Failed Record poller completed at {}", LocalTime.now());
-    }*/
+    }
 
     @GetMapping("/processMessageGroupStuckRecords")
     public void processStuckRecords() {

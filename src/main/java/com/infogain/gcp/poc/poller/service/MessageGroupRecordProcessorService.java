@@ -25,13 +25,13 @@ public class MessageGroupRecordProcessorService {
     private final SpannerGroupMessageStoreRepository groupMessageStoreRepository;
     private final String ip;
 
-    //@Value(value = "${limit}")
+    @Value(value = "${limit}")
     private int recordLimit=10;
 
     private static final String GRP_MSG_STORE_FAILED_SQL =
             "SELECT * FROM group_message_store WHERE STATUS =3 and retry_count<=3";
     private static final String GRP_MSG_STORE_STUCK_RECORD_SQL =
-            "SELECT * FROM group_message_store WHERE STATUS =1 and TIMESTAMP_DIFF(CURRENT_TIMESTAMP,updated, MINUTE)>5";
+            "SELECT * FROM group_message_store WHERE STATUS in(1,2) and TIMESTAMP_DIFF(CURRENT_TIMESTAMP,updated, MINUTE)>5";
 
     @Autowired
     @SneakyThrows
@@ -40,19 +40,19 @@ public class MessageGroupRecordProcessorService {
         ip = InetAddress.getLocalHost().getHostAddress();
     }
 
-   /* public void processFailedRecords() {
+   public void processFailedRecords() {
         doProcessFailedRecords(getRecord(GRP_MSG_STORE_FAILED_SQL));
-    }*/
+    }
 
     public void processStuckRecords() {
         doProcessStuckRecords(getRecord(GRP_MSG_STORE_STUCK_RECORD_SQL));
     }
 
-    /*public void doProcessFailedRecords(List<GroupMessageStoreEntity> recordToProcess) {
+    public void doProcessFailedRecords(List<GroupMessageStoreEntity> recordToProcess) {
         log.info("total record -> {} to process by application->  {}", recordToProcess.size(), ip);
         log.info("RECORD {}", recordToProcess);
-        process(recordToProcess);
-    }*/
+        recordToProcess.stream().forEach(x->updateRecord(x, RecordStatus.IN_PROGESS.getStatusCode()));
+    }
 
     public void doProcessStuckRecords(List<GroupMessageStoreEntity> recordToProcess) {
         log.info("total record -> {} to process by application->  {}", recordToProcess.size(), ip);
@@ -72,7 +72,7 @@ public class MessageGroupRecordProcessorService {
     }
 
     private void updateRecord(GroupMessageStoreEntity entity, int status) {
-        if(entity.getStatus()==RecordStatus.FAILED.getStatusCode()) {
+        if(status==RecordStatus.FAILED.getStatusCode()) {
             entity.setRetry_count(entity.getRetry_count()+1);
         }
         entity.setStatus(status);

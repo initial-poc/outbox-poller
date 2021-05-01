@@ -39,7 +39,7 @@ public class APIGatewayService {
 	}
 
 	private void updateRecord(OutboxEntity entity, int status) {
-		if(entity.getStatus()==RecordStatus.FAILED.getStatusCode()) {
+		if(status==RecordStatus.FAILED.getStatusCode()) {
 			entity.setRetry_count(entity.getRetry_count()+1);
 		}
 		entity.setStatus(status);
