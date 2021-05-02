@@ -35,6 +35,8 @@ public class OutboxEntity {
 
     private Timestamp updated;
 
+    private long processing_time_millis;
+
 
     @SneakyThrows
     public PNRModel buildModel() {

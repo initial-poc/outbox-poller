@@ -45,14 +45,6 @@ public class OutboxRecordProcessorService {
 		doProcess(getRecord(OUTBOX_SQL));
 	}
 
-	public void processFailedRecords() {
-		doProcess(getRecord(OUTBOX_FAILED_RECORD_SQL));
-	}
-
-	public void processStuckRecords() {
-		doProcess(getRecord(OUTBOX_STUCK_RECORD_SQL));
-	}
-
 	public void doProcess(List<OutboxEntity> recordToProcess) {
 		log.info("total record -> {} to process by application->  {}", recordToProcess.size(), ip);
 		log.info("RECORD {}", recordToProcess);

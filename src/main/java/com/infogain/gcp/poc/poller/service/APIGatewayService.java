@@ -1,6 +1,7 @@
 package com.infogain.gcp.poc.poller.service;
 
 import com.google.cloud.Timestamp;
+import com.google.common.base.Stopwatch;
 import org.springframework.stereotype.Service;
 
 import com.infogain.gcp.poc.poller.entity.OutboxEntity;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -21,19 +24,23 @@ public class APIGatewayService {
 	private final OutboxGateway gateway;
 
 	public void processRecord(OutboxEntity outboxEntity) {
+		Stopwatch stopWatch = Stopwatch.createStarted();
 		if(outboxEntity.getStatus()==RecordStatus.IN_PROGESS.getStatusCode()) {
 			updateRecord(outboxEntity,RecordStatus.FAILED.getStatusCode());
 			return;
 		}
 
 		updateRecord(outboxEntity, RecordStatus.IN_PROGESS.getStatusCode());
-
 		Mono<String> responseBody = gateway.callService(outboxEntity.buildModel());
 		responseBody.doOnError(exp -> {
 			log.info("on Error {}", exp.getMessage());
+			stopWatch.stop();
+			outboxEntity.setProcessing_time_millis(stopWatch.elapsed(TimeUnit.MILLISECONDS));
 			updateRecord(outboxEntity, RecordStatus.FAILED.getStatusCode());
 		}).subscribe(s -> {
 			log.info("Got the response -> {}", s);
+			stopWatch.stop();
+			outboxEntity.setProcessing_time_millis(stopWatch.elapsed(TimeUnit.MILLISECONDS));
 			updateRecord(outboxEntity, RecordStatus.COMPLETED.getStatusCode());
 		});
 	}
