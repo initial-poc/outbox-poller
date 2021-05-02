@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @Component
-@RestController
 public class OutboxPollerExecutor {
 
     @Autowired
     private OutboxRecordProcessorService pollerOutboxRecordProcessorService;
 
-    @GetMapping("/processOutboxRecords")
+    @Scheduled(cron = "*/5 * * * * *")
     public void process() {
         log.info("poller started at {}", LocalTime.now());
         pollerOutboxRecordProcessorService.processRecords();
