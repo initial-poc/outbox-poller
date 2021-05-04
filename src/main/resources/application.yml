@@ -5,17 +5,13 @@ spring:
      hibernate:
        jdbc:
          batch_size: 20
- profiles.active: dev
+ profiles.active: emulator
  cloud:
    gcp:
      project-id: pnr-order-poc
      spanner:
        instance-id: instance-1
        database: database-1
-
-
- 
-
 
 ## logging
 logging:
@@ -45,3 +41,23 @@ spring.profiles: test
 
 ---
 spring.profiles: prod
+
+---
+spring.profiles: emulator
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 20
+  profiles.active: dev
+  cloud:
+    gcp:
+      project-id: pnr-order-poc
+      spanner:
+        emulator:
+          enabled: true
+        emulator-host: localhost:9010
+        instance-id: instance-1
+        database: database-1
