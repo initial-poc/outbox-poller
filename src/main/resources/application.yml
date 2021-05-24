@@ -53,10 +53,10 @@ spring:
           batch_size: 20
   cloud:
     gcp:
-      project-id: pnr-order-poc
+      project-id: sab-ors-poc-sbx-01-9096
       spanner:
         emulator:
-          enabled: true
+          enabled: false
         emulator-host: localhost:9010
         instance-id: instance-1
         database: database-1
