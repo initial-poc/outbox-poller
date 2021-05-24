@@ -8,7 +8,7 @@ spring:
  profiles.active: emulator
  cloud:
    gcp:
-     project-id: pnr-order-poc
+     project-id: sab-ors-poc-sbx-01-9096
      spanner:
        instance-id: instance-1
        database: database-1
