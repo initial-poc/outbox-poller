@@ -13,6 +13,6 @@ spec:
         app: outbox-poller-pod
     spec:
       containers:
-        - image: gcr.io/pnr-order-poc/outbox-poller:latest
+        - image: gcr.io/sab-ors-poc-sbx-01-9096/outbox-poller:latest
           name: outbox-poller
             
