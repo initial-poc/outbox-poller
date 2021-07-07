@@ -7,10 +7,12 @@ spring:
      hibernate:
        jdbc:
          batch_size: 20
- profiles.active: emulator
+ profiles.active: dev
  cloud:
    gcp:
      project-id: sab-ors-poc-sbx-01-9096
+     credentials:
+       location: classpath:cred.json
      spanner:
        instance-id: instance-1
        database: database-1
@@ -18,7 +20,7 @@ spring:
 ## logging
 logging:
   pattern.console: '%d{yyyy-MM-dd HH:mm:ss} [%X{source}] [%X{correlation-id}] [%-5level] [%C:%L] - %m%n'
-  file: logs/spanner-pollar-convereter-publisher/app.log
+  file: logs/outbox-poller/poller.log
   level.org.springframework: info
 
 # actuator properties
