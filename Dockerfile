@@ -16,4 +16,4 @@ ARG jar_file=target/outbox-poller.jar
 COPY ${jar_file} outbox-poller.jar
 
 # run the jar file
-ENTRYPOINT ["java", "-jar", "-DserviceUrl=35.226.189.52:80","-Dlimit=10","outbox-poller.jar" ]
+ENTRYPOINT ["java", "-jar", "-DserviceUrl=10.0.0.201:80","-Dlimit=10","outbox-poller.jar" ]

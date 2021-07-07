@@ -18,7 +18,7 @@ import reactor.netty.http.client.HttpClient;
 public class AppConfig {
 
     @Value(value = "${serviceUrl}")
-    private String seriveUrl = "localhost:9000";
+    private String seriveUrl;
 
     @Bean
     public RestTemplate restTemplate() {
