@@ -15,4 +15,16 @@ spec:
       containers:
         - image: gcr.io/sab-ors-poc-sbx-01-9096/outbox-poller:latest
           name: outbox-poller
+          resources:
+           limits:
+             cpu: 10000m
+             ephemeral-storage: 1Gi
+             memory: 20Gi
+           requests:
+             cpu: 10000m
+             ephemeral-storage: 1Gi
+             memory: 20Gi 
             
+            
+            
+  

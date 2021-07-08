@@ -1,6 +1,8 @@
 package com.infogain.gcp.poc.poller.gateway;
 
 import java.net.URI;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -39,14 +41,11 @@ public class OutboxGateway {
 		return response;
 	}
 
-	public static ThreadPoolTaskExecutor taskExecutor() {
-		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(5);
-		executor.setMaxPoolSize(10);
-		executor.setQueueCapacity(100);
-		executor.setThreadNamePrefix("outbox-");
-		executor.initialize();
-		return executor;
+	public static ExecutorService taskExecutor() {
+
+
+	return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
 	}
 
 	public Mono<String> callService(PNRModel req) {
