@@ -17,11 +17,11 @@ spec:
           name: outbox-poller
           resources:
            limits:
-             cpu: 20000m
+             cpu: 40000m
              ephemeral-storage: 1Gi
              memory: 20Gi
            requests:
-             cpu: 20000m
+             cpu: 40000m
              ephemeral-storage: 1Gi
              memory: 20Gi 
             

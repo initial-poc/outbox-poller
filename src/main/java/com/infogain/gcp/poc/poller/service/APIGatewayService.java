@@ -21,6 +21,7 @@ public class APIGatewayService {
 	private final SpannerOutboxRepository outboxRepository;
 	private final OutboxGateway gateway;
 
+	@Async("specificTaskExecutor")
 	public void processRecord(OutboxEntity outboxEntity) {
 		Stopwatch stopWatch = Stopwatch.createStarted();
 		if(outboxEntity.getStatus()==RecordStatus.IN_PROGESS.getStatusCode()) {
