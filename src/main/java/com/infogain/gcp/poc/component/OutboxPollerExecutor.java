@@ -1,17 +1,11 @@
 package com.infogain.gcp.poc.component;
 
-import java.time.LocalTime;
-
-import lombok.extern.java.Log;
+import com.infogain.gcp.poc.poller.service.OutboxRecordProcessorService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.infogain.gcp.poc.poller.service.OutboxRecordProcessorService;
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.time.LocalTime;
 
 @Slf4j
 @Component
@@ -20,11 +14,22 @@ public class OutboxPollerExecutor {
     @Autowired
     private OutboxRecordProcessorService pollerOutboxRecordProcessorService;
 
-    @Scheduled(cron = "*/5 * * * * *")
     public void process() {
-        log.info("poller started at {}", LocalTime.now());
-        pollerOutboxRecordProcessorService.processRecords();
-        log.info("poller completed at {}", LocalTime.now());
+        while (true) {
+            log.info("poller started at {}", LocalTime.now());
+            long nextPollerExecutionInterval = pollerOutboxRecordProcessorService.processRecords();
+            try {
+                Thread.sleep(nextPollerExecutionInterval);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("poller completed at {}", LocalTime.now());
+        }
     }
-
 }
+
+
+
+
+
+

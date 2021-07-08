@@ -23,11 +23,13 @@ public class OutboxRecordProcessorService {
 	private final APIGatewayService outboxStatusService;
 	private final SpannerOutboxRepository spannerOutboxRepository;
 	private final String ip;
+	private static final long POLLER_WAIT_TIME_FOR_NEXT_INTERVAL_IN_MILI_SEC= 2000;
+	private static final long POLLER_IMMEDIATE_EXECUTION_INTERVAL_IN_MILI_SEC= 1;
 
 	@Value(value = "${limit}")
 	private int recordLimit=10;
 
-	private static final String OUTBOX_SQL = "SELECT * FROM OUTBOX WHERE STATUS =0 order by updated desc";
+	private static final String OUTBOX_SQL = "SELECT * FROM OUTBOX WHERE STATUS =0 order by created desc limit 2000";
 	private static final String OUTBOX_FAILED_RECORD_SQL =
 			"SELECT * FROM OUTBOX WHERE STATUS =3 and retry_count<=3";
 	private static final String OUTBOX_STUCK_RECORD_SQL =
@@ -41,8 +43,17 @@ public class OutboxRecordProcessorService {
 		ip = InetAddress.getLocalHost().getHostAddress();
 	}
 
-	public void processRecords() {
-		doProcess(getRecord(OUTBOX_SQL));
+	public long processRecords() {
+		List<OutboxEntity> outboxEntities = getRecord(OUTBOX_SQL);
+
+
+		if(outboxEntities.isEmpty()){
+			log.info("=========   Record not found for processing =========");
+			return POLLER_WAIT_TIME_FOR_NEXT_INTERVAL_IN_MILI_SEC;
+		}
+
+		doProcess(outboxEntities);
+		return POLLER_IMMEDIATE_EXECUTION_INTERVAL_IN_MILI_SEC;
 	}
 
 	public void doProcess(List<OutboxEntity> recordToProcess) {
