@@ -29,7 +29,7 @@ public class OutboxRecordProcessorService {
 	@Value(value = "${limit}")
 	private int recordLimit=10;
 
-	private static final String OUTBOX_SQL = "SELECT * FROM OUTBOX WHERE STATUS =0 order by created desc limit 2000";
+	private static final String OUTBOX_SQL = "SELECT * FROM OUTBOX WHERE STATUS =0 order by created desc limit 300";
 	private static final String OUTBOX_FAILED_RECORD_SQL =
 			"SELECT * FROM OUTBOX WHERE STATUS =3 and retry_count<=3";
 	private static final String OUTBOX_STUCK_RECORD_SQL =
