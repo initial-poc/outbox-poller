@@ -34,7 +34,7 @@ public class OutboxGateway {
 		return "http://" + seriveUrl + "/api/pnrs";
 	}
 
-	@Async
+	@Async("specificTaskExecutor")
 	public void callServiceTemp(PNRModel req) {
 		String response = null;
 		try {

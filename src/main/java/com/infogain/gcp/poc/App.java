@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import java.io.IOException;
 
 @SpringBootApplication
+@EnableAsync
 public class App implements CommandLineRunner {
 	@Autowired
 	private OutboxPollerExecutor outboxPollerExecutor;
