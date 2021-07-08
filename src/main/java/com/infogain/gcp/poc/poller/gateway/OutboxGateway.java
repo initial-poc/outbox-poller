@@ -1,23 +1,21 @@
 package com.infogain.gcp.poc.poller.gateway;
 
-import java.net.URI;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
+import com.infogain.gcp.poc.poller.domainmodel.PNRModel;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import com.infogain.gcp.poc.poller.domainmodel.PNRModel;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+
+import java.net.URI;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component
 @RequiredArgsConstructor
@@ -27,11 +25,19 @@ public class OutboxGateway {
 	private final RestTemplate restTemplate;
 	private final	WebClient webClient;
 
+
+	@Value(value = "${serviceUrl}")
+	private String seriveUrl;
+
+	private String buildUrl() {
+		return "http://" + seriveUrl + "/api/pnrs";
+	}
+
 	public String callServiceTemp(PNRModel req) {
 		String response = null;
 		try {
 			RequestEntity<PNRModel> requestEntity = new RequestEntity<PNRModel>(req, HttpMethod.POST,
-					new URI("http://localhost:9000/api/pnrs"));
+					new URI(buildUrl()));
 			response = restTemplate.exchange(requestEntity, String.class).getBody();
 
 		} catch (Exception ex) {
