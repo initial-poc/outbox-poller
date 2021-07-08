@@ -8,6 +8,7 @@ import com.infogain.gcp.poc.poller.repository.SpannerOutboxRepository;
 import com.infogain.gcp.poc.util.RecordStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -29,15 +30,11 @@ public class APIGatewayService {
 
 		updateRecord(outboxEntity, RecordStatus.IN_PROGESS.getStatusCode());
 
-		String response = gateway.callServiceTemp(outboxEntity.buildModel());
+		 gateway.callServiceTemp(outboxEntity.buildModel());
 		stopWatch.stop();
-		if(response==null) {
-			outboxEntity.setProcessing_time_millis(stopWatch.elapsed(TimeUnit.MILLISECONDS));
-			updateRecord(outboxEntity, RecordStatus.FAILED.getStatusCode());
-		}else {
+
 			outboxEntity.setProcessing_time_millis(stopWatch.elapsed(TimeUnit.MILLISECONDS));
 			updateRecord(outboxEntity, RecordStatus.COMPLETED.getStatusCode());
-		}
 
 	/*	Mono<String> responseBody = gateway.callService(outboxEntity.buildModel());
 		responseBody.doOnError(exp -> {

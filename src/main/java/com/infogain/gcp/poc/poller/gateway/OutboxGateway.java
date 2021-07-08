@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -33,7 +34,8 @@ public class OutboxGateway {
 		return "http://" + seriveUrl + "/api/pnrs";
 	}
 
-	public String callServiceTemp(PNRModel req) {
+	@Async
+	public void callServiceTemp(PNRModel req) {
 		String response = null;
 		try {
 			RequestEntity<PNRModel> requestEntity = new RequestEntity<PNRModel>(req, HttpMethod.POST,
@@ -44,14 +46,11 @@ public class OutboxGateway {
 			log.error("Got the error from the service {}", ex.getMessage());
 
 		}
-		return response;
+		//return response;
 	}
 
 	public static ExecutorService taskExecutor() {
-
-
 	return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
 	}
 
 	public Mono<String> callService(PNRModel req) {
